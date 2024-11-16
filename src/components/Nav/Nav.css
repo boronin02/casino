@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Poppins:wght@400;500;700&family=Rubik+Mono+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz@9..40&family=Poppins:wght@400;500;700&display=swap');
+
+.nav {
+    max-width: 1920px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 8px 0;
+    border-bottom: 1px solid #26292D;
+}
+
+.container-head {
+    width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container-head h1 {
+    font-family: "Rubik Mono One", monospace;
+    font-size: 24px;
+    color: #fff;
+    font-weight: 500;
+    letter-spacing: 0.9px;
+}
+
+.container-head h1 span {
+    color: #5C62EC;
+}
+
+.header-middle {
+    display: flex;
+    width: 147px;
+    gap: 50px;
+    justify-content: space-between;
+}
+
+.header-middle-text {
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 24px;
+    color: white;
+}
+
+.header-right {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.balance-wrapper {
+    display: flex;
+    align-items: center;
+    width: 200px;
+    height: 50px;
+    border-radius: 10px;
+    border: none;
+    text-decoration: none;
+    background-color: #590c1c;
+    cursor: pointer;
+}
+
+.balance-text {
+    margin: 0 auto;
+    font-size: 31px;
+    color: #fff;
+}
+
+.account-wrapper {
+    display: flex;
+    align-items: center;
+
+    width: 182px;
+    height: 61px;
+    padding: 21px 17px;
+    border-radius: 10px;
+    font-size: 18px;
+    color: #fff;
+    border: none;
+    text-decoration: none;
+    background-color: #590c1c;
+    box-shadow: 0 0 5px #590c1c;
+    cursor: pointer;
+}
+
+.account-wrapper-button {
+    font-size: 18px;
+
+    color: #fff;
+}
+
+.btn {
+    background: radial-gradient(223% 105.53% at 6.05% 199.17%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(31.68% 130.91% at 100% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(43.14% 139.47% at 0% 136.21%, rgba(227, 235, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(170deg, rgb(64, 22, 160) 7.99%, rgb(63, 89, 228) 93.36%);
+    color: #fff;
+    padding: 12px 33px 10px 33px;
+    box-shadow: 0 4px 12px rgba(70, 126, 223, .2);
+}
+
+/* Кнопка на вход */
+.button {
+    margin: 0px;
+    align-items: center;
+    background: radial-gradient(223% 105.53% at 6.05% 199.17%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(31.68% 130.91% at 100% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(43.14% 139.47% at 0% 136.21%, rgba(227, 235, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(170deg, rgb(64, 22, 160) 7.99%, rgb(63, 89, 228) 93.36%);
+    border-width: 0px;
+    border-radius: 0.6rem;
+    border-style: solid;
+    color: rgb(255, 254, 250);
+    display: flex;
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+    justify-content: center;
+    padding: 1.2rem 3.2rem;
+    width: 160px;
+    height: 48px;
+    text-decoration: none;
+    transition: 0.4s ease-in-out;
+    font-family: Aeonik, sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.button:hover {
+    box-shadow: rgba(182, 202, 255, 0.24) 0px 8px 55px 0px;
+    transition: 0.4s ease-in-out;
+    color: rgb(255, 254, 250);
+}
+
+/* Кнопки после входа */
+
+.button__account-balance {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    padding: 10px 10px 11px 10px;
+    width: 142px;
+    height: 48px;
+    background-color: #171718;
+    border: 1px solid #C0C0C0;
+    border-radius: 7px;
+
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0.01em;
+
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
+}
+
+.button__account-balance:hover {
+    box-shadow: rgba(182, 202, 255, 0.24) 0px 8px 55px 0px;
+    transition: 0.4s ease-in-out;
+    color: rgb(255, 254, 250);
+}

@@ -1,8 +1,207 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
-    font-family: "Fira Code", monospace;
-    background-color: #1E1E1E;
-    background-image: url('./assets/Bg1.png'), url('./assets/Bg2.png');
-    background-size: cover, contain;
-    background-position: center, center;
+    background-color: #171718;
+}
+
+main,
+footer {
+    font-family: 'DM Sans', Arial, sans-serif;
+}
+
+.logo-link {
+    text-decoration: none;
+}
+
+.logo {
+    margin-bottom: 10px;
+    font-size: 24px;
+    color: red;
+    font-weight: 600;
+    letter-spacing: 0.9px;
+}
+
+.main-container {
+    margin-top: 60px;
+    margin-bottom: 60px;
+    background-image: url('./img/Abstract.png'), url('./components/Nav/bg.png');
     background-repeat: no-repeat;
+    background-position: 227px -97px, 102px -24px;
+}
+
+.main__content {
+    display: flex;
+    gap: 105px;
+    align-items: center;
+    justify-content: center;
+}
+
+.main__content p {
+    width: 426px;
+    height: 127px;
+    line-height: 1.15;
+
+    font-size: 24px;
+    font-weight: 500;
+    color: #fff;
+    font-family: "DM Sans", serif;
+    user-select: none;
+}
+
+@keyframes circular-motion {
+    0% {
+        transform: rotate(0deg) translateX(20px) rotate(0deg);
+    }
+
+    25% {
+        transform: rotate(90deg) translateX(20px) rotate(-90deg);
+    }
+
+    50% {
+        transform: rotate(180deg) translateX(20px) rotate(-180deg);
+    }
+
+    75% {
+        transform: rotate(270deg) translateX(20px) rotate(-270deg);
+    }
+
+    100% {
+        transform: rotate(360deg) translateX(20px) rotate(-360deg);
+    }
+}
+
+.main__content img {
+    animation: circular-motion 6s linear infinite;
+    display: block;
+    transform-origin: center;
+    user-select: none;
+}
+
+/*  */
+.game-container {
+    width: 1920px;
+    height: 100%;
+    background: #fff;
+}
+
+.game-content {
+    width: 1400px;
+    margin: 0 auto;
+    padding: 75px 0;
+}
+
+.game__header {
+    margin-bottom: 82px;
+    text-align: center;
+    font-size: 60px;
+    font-weight: 700;
+    color: #5C62EC;
+}
+
+.slots {
+    display: flex;
+    gap: 45px;
+    justify-content: center;
+}
+
+.slot {
+    width: 562px;
+    height: 525px;
+    background-color: #fff;
+    box-shadow: 0px 5px 35px rgba(0, 0, 0, .25);
+    border-radius: 10px;
+}
+
+.slot a {
+    text-decoration: none;
+}
+
+.slot p {
+    margin-top: 7px;
+    margin-left: 30px;
+    font-size: 36px;
+    font-weight: 700;
+    color: #000;
+}
+
+.slot img {
+    width: 562px;
+    margin-bottom: 22px;
+    border-radius: 10px;
+}
+
+/* Footer */
+
+.footer__container {
+    padding: 60px 0;
+    width: 1920px;
+    height: 100%;
+    background-color: #171718;
+}
+
+.footer__content {
+    display: flex;
+    justify-content: center;
+    color: #fff;
+}
+
+/* Слот ракетка */
+
+.rocket__container {
+    width: 1920px;
+    height: 900px;
+    background-color: #151028;
+}
+
+.rocket__content {
+    padding: 10px 18px;
+}
+
+.all__game {
+    width: 150px;
+    height: 34px;
+    padding: 8px 64px;
+
+    border-radius: 8px;
+
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 150%;
+    text-align: center;
+    color: #fff;
+
+    font-family: "Manrope", sans-serif;
+    background: #261c4a;
+}
+
+.my__game {
+    padding: 8px 62px 8px 62px;
+    width: 149px;
+    height: 34px;
+
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 150%;
+    text-align: center;
+
+    color: #948ac5;
+
+    font-family: "Manrope", sans-serif;
+    background: #110d21;
+}
+
+.history__game {
+    display: flex;
+}
+
+.history__betting {
+    width: 303px;
+    height: 795px;
+
+    background: #151028;
 }

@@ -5,6 +5,7 @@ function Button(props) {
         <button
             onClick={props.onClick}
             className={props.className}>
+            <img src={props.img} alt="" />
             {props.text}
         </button>
     )

@@ -6,7 +6,7 @@ import "./UserAccess.css";
 import { signUp, signIn } from "./Api";
 import Balance from "../Balance/Balance";
 
-function UserAccess({ isOpen, onClose }) {
+function UserAccess({ isOpen, onClose, onLoginSuccess }) {
     const [registration, setRegistration] = useState({
         name: '',
         login: '',
@@ -24,47 +24,18 @@ function UserAccess({ isOpen, onClose }) {
     const [isSignUp, setIsSignUp] = useState(true);
     const [token, setToken] = useState(localStorage.getItem("token"));
 
-    const inputs = [
-        {
-            name: 'name',
-            type: 'text',
-            placeholder: 'Имя',
-            value: registration.name,
-        },
-        {
-            name: 'login',
-            type: 'text',
-            placeholder: 'Логин',
-            value: registration.login,
-        },
-        {
-            name: 'password',
-            type: 'password',
-            placeholder: 'Пароль',
-            value: registration.password,
-        },
-        {
-            name: 'password_again',
-            type: 'password',
-            placeholder: 'Повторите пароль',
-            value: registration.password_again,
-        }
-    ];
-
     const handleInputChange = (event) => {
         const { name, value } = event.target;
 
-        if (inputs.some(input => input.name === name)) {
-            setRegistration(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        } else {
-            setLogin(prev => ({
-                ...prev,
-                [name]: value
-            }));
-        }
+        setRegistration({
+            ...registration,
+            [name]: value
+        })
+
+        setLogin({
+            ...registration,
+            [name]: value
+        })
 
         setErrors(prev => ({
             ...prev,
@@ -110,6 +81,8 @@ function UserAccess({ isOpen, onClose }) {
                 setToken(token);
                 localStorage.setItem("token", token);
                 console.log('Успех:', data);
+                onLoginSuccess(token);
+                onClose();
             })
             .catch(error => console.error('Ошибка:', error));
     };
@@ -130,17 +103,38 @@ function UserAccess({ isOpen, onClose }) {
                         <div className="form-container sign-up">
                             <form>
                                 <Heading className='registration-head' text='Создание аккаунта' level='h1' />
-                                {inputs.map((input, index) => (
-                                    <Input
-                                        key={index}
-                                        className="registration__input"
-                                        type={input.type}
-                                        name={input.name}
-                                        placeholder={input.placeholder}
-                                        value={input.value}
-                                        onChange={handleInputChange}
-                                    />
-                                ))}
+                                <Input
+                                    className="registration__input"
+                                    type="text"
+                                    name="name"
+                                    placeholder="Имя"
+                                    value={registration.name}
+                                    onChange={handleInputChange}
+                                />
+                                <Input
+                                    className="registration__input"
+                                    type="text"
+                                    name="login"
+                                    placeholder="Логин"
+                                    value={registration.login}
+                                    onChange={handleInputChange}
+                                />
+                                <Input
+                                    className="registration__input"
+                                    type="password"
+                                    name="password"
+                                    placeholder="Пароль"
+                                    value={registration.password}
+                                    onChange={handleInputChange}
+                                />
+                                <Input
+                                    className="registration__input"
+                                    type="password"
+                                    name="password_again"
+                                    placeholder="Повторите пароль"
+                                    value={registration.password_again}
+                                    onChange={handleInputChange}
+                                />
                                 <Button
                                     className="button__register button"
                                     text="Зарегистрироваться"
@@ -151,7 +145,7 @@ function UserAccess({ isOpen, onClose }) {
 
                         <div className="form-container sign-in">
                             <form>
-                                <Heading className='registration-head' text='Вход в аккаунт' level='h1' />
+                                <Heading className='form-head' text='Вход в аккаунт' level='h1' />
                                 <Input
                                     className="registration__input"
                                     type="text"
@@ -190,7 +184,6 @@ function UserAccess({ isOpen, onClose }) {
                             </div>
                         </div>
                     </div>
-                    <Balance token={token} />
                 </div>
             )}
         </>

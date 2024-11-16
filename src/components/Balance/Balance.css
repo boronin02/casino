@@ -1,0 +1,63 @@
+.balance__container {
+    padding-top: 60px;
+    margin: 0 auto;
+    width: 1400px;
+}
+
+.balance__select,
+.balance__input,
+.button__register {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    outline: none;
+    margin: 10px 0;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.balance__select {
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+}
+
+.balance__input {
+    background-color: #fff;
+    color: #333;
+    border: 2px solid #ddd;
+}
+
+.balance__input:focus,
+.balance__select:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
+}
+
+/* Стиль для кнопки */
+.button__register {
+    background-color: #4CAF50;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    text-align: center;
+    padding: 12px 20px;
+    margin-top: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.button__register:hover {
+    background-color: #45a049;
+}
+
+.button__register:active {
+    background-color: #3c8d40;
+}
+
+.balance__select option:disabled {
+    color: #aaa;
+}

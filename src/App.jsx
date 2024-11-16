@@ -1,13 +1,25 @@
-import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Header from './components/Header/Header';
-import UserAccess from './components/UserAccess/UserAccess';
-import Balance from './components/Balance/Balance'
+import Nav from './components/Nav/Nav';
+import Transaction from './pages/Transaction';
+import Slot from './pages/Slot';
+import Home from './pages/Home';
+import Footer from './components/Footer/Footer';
+import Rocket from './pages/Rocket';
 
 function App() {
+
   return (
     <>
-      <Header />
+      <Router>
+        <Nav />
+        <Routes>
+          <Route path="/transaction" element={<Transaction />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/rocket' element={<Rocket />} />
+        </Routes>
+        <Footer />
+      </Router>
     </>
   );
 }
