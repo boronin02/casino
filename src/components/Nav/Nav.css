@@ -29,13 +29,6 @@
     color: #5C62EC;
 }
 
-.header-middle {
-    display: flex;
-    width: 147px;
-    gap: 50px;
-    justify-content: space-between;
-}
-
 .header-middle-text {
     font-family: "Poppins", serif;
     font-weight: 400;
@@ -134,11 +127,11 @@
 
 .button__account-balance {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    /* Разделяем текст и изображение */
     align-items: center;
-    gap: 5px;
 
-    padding: 10px 10px 11px 10px;
+    padding: 10px;
     width: 142px;
     height: 48px;
     background-color: #171718;
@@ -154,6 +147,16 @@
     cursor: pointer;
     transition: 0.4s ease-in-out;
 }
+
+.button__account-balance img {
+    margin-right: 8px;
+    /* Отступ между текстом и изображением */
+    height: 24px;
+    /* Устанавливаем размер изображения */
+    width: auto;
+    /* Сохраняем пропорции изображения */
+}
+
 
 .button__account-balance:hover {
     box-shadow: rgba(182, 202, 255, 0.24) 0px 8px 55px 0px;

@@ -159,7 +159,13 @@ footer {
 }
 
 .rocket__content {
+    display: flex;
+    gap: 19px;
     padding: 10px 18px;
+}
+
+.rocket__left {
+    width: 299px;
 }
 
 .all__game {
@@ -200,8 +206,296 @@ footer {
 }
 
 .history__betting {
-    width: 303px;
+    width: 299px;
     height: 795px;
 
     background: #151028;
+}
+
+.betting-top {
+    margin-bottom: 15px;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.bettint-top-left p {
+    font-family: "Manrope", sans-serif;
+}
+
+.total-bets {
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 150%;
+    color: rgba(223, 229, 242, 0.5);
+}
+
+.total-count {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #fff;
+}
+
+.last-round {
+    width: 124px;
+    height: 32px;
+    border-radius: 8px;
+    padding: 7px 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 150%;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+
+    background-color: #231d47;
+}
+
+.history__item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    border-radius: 11px;
+    padding: 2px 4px 2px 3px;
+    width: 299px;
+    height: 32px;
+    border: 1px solid rgba(148, 78, 245, 0.5);
+    background-color: rgba(148, 78, 245, 0.25);
+}
+
+.mult-btn {
+    display: flex;
+    justify-content: center;
+    border-radius: 7px;
+    padding: 6px 13px 7px 13px;
+    width: 58px;
+    height: 26px;
+    background: #3e5bc2;
+}
+
+.rocket__center {
+    width: 1295px;
+}
+
+.rocket__center-top {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ratio {
+    width: 1252px;
+    display: flex;
+    gap: 6px;
+}
+
+.ratio__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    padding: 16px 0;
+    width: 58px;
+    height: 26px;
+    background: #3e5bc2;
+
+    color: #fff;
+
+}
+
+/* Градиент для последнего элемента */
+.ratio__item:nth-last-child(1) {
+    background: linear-gradient(to right, #3e5bc2, rgba(240, 240, 240, 0));
+}
+
+.timer__img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #151028;
+    border-radius: 8px;
+    padding: 8px 11px 9px 11px;
+    width: 30px;
+    height: 30px;
+    max-width: 30px;
+    min-height: 30px;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.15);
+    background: #231d47;
+}
+
+.rocket__center-middle {
+    margin: 12px 0;
+    height: 619px;
+    background-image: url('./img/cloudsBG.png'), url('./img/starsBG.png');
+    background-repeat: no-repeat;
+    background-position: left bottom, top left;
+}
+
+.rocket__center-middle--text {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    font-weight: 900;
+    font-size: 70px;
+    line-height: 94%;
+    color: #944ef5;
+    font-family: "Manrope", sans-serif;
+}
+
+.rocket__center-bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rocket__center-bottom-btn {
+    padding: 8px 10px 13px 10px;
+    width: 507px;
+    height: 142px;
+}
+
+.bottom__btn-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    gap: 42px;
+    box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.15);
+    background: linear-gradient(90deg, #1f183d 0%, #261f4d 100%);
+    border-radius: 14px;
+    margin-bottom: -19px;
+    z-index: 2;
+    padding-bottom: 20px;
+}
+
+.bottom__btn-bottom {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 10px 13px 10px;
+    height: 95px;
+    box-shadow: 0 -4px 24px 0 rgba(0, 0, 0, 0.15);
+    background: linear-gradient(90deg, #241d47 0%, #2b2357 100%);
+    border-radius: 14px;
+    position: relative;
+    /* Для упрощения наложения */
+    z-index: 1;
+    /* Устанавливаем нижний блок ниже по слою */
+}
+
+.bottom__btn-bottom--left {
+    width: 193px;
+    height: 72px;
+    background: #1c1537;
+    border-radius: 10px;
+}
+
+.bottom__btn-bottom--right button {
+    box-shadow: inset 0 -8px 8px 0 rgba(148, 78, 245, 0.6),
+        inset 0 -2px 4px 0 #944ef5,
+        0 10px 20px 0 rgba(92, 36, 252, 0.1),
+        0 10px 20px 0 rgba(25, 201, 245, 0.1);
+    background: linear-gradient(254deg, #944ef5 0%, #5c24fc 100%);
+    border-radius: 12px;
+    padding: 23px 48px;
+    width: clamp(200px, 20vw, 264px);
+    height: clamp(50px, 10vw, 66px);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: all 0.6s ease;
+    border: none;
+}
+
+.bottom__btn-bottom--right button:hover {
+    box-shadow: inset 0 -8px 8px 0 rgba(148, 78, 245, 0.8),
+        inset 0 -2px 4px 0 #944ef5,
+        0 12px 24px 0 rgba(92, 36, 252, 0.2),
+        0 12px 24px 0 rgba(25, 201, 245, 0.2);
+    transform: scale(1.02);
+    cursor: pointer;
+}
+
+.btn-top--text {
+    display: flex;
+    gap: 12px;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 150%;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+}
+
+.btn-ratio input {
+    border-radius: 8px;
+    padding: 8px 41px 8px 41px;
+    width: 181px;
+    height: 30px;
+    background-color: #1c1537;
+    border: none;
+}
+
+.bottom__btn-bottom--left {
+    padding: 5px 0 0 5px;
+}
+
+.bottom__btn-bottom--left .top {
+    display: flex;
+
+    gap: 51px;
+    padding-bottom: 10px;
+}
+
+.bottom__btn-bottom--left .top img {
+    width: 10px;
+    height: 13px;
+}
+
+.bottom__btn-bottom--left .top p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: center;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+}
+
+.bottom {
+    display: flex;
+    gap: 5px;
+}
+
+.wrapper__img {
+    border-radius: 10px;
+    padding: 6px 7px 7px 7px;
+    width: 26px;
+    height: 26px;
+    background: #231d47;
+}
+
+.wrapper__text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+
+    border-radius: 10px;
+    padding: 0 10px;
+    /* Добавляет отступы по горизонтали */
+    height: 25px;
+    background: #231d47;
+
+    font-weight: 700;
+    font-size: 10px;
+    color: #948ac5;
+    font-family: "Manrope", sans-serif;
+
+    white-space: nowrap;
+    /* Гарантирует, что текст не будет переноситься */
 }

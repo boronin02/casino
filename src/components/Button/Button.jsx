@@ -4,10 +4,11 @@ function Button(props) {
     return (
         <button
             onClick={props.onClick}
-            className={props.className}>
-            <img src={props.img} alt="" />
-            {props.text}
+            className="button__account-balance">
+            <span style={{ flex: 1, textAlign: "center" }}>{props.text}</span> {/* Текст выравниваем по центру */}
+            {props.img && <img src={props.img} alt="" />}
         </button>
+
     )
 }
 
