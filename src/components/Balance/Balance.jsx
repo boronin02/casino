@@ -19,7 +19,6 @@ function Balance({ token }) {
 
     function handleRegisterBtnClick() {
         console.log('Токен перед отправкой:', token);
-        console.log(balance);
         fetch('http://localhost:8000/api/transaction/create', {
             method: 'POST',
             headers: {
