@@ -7,13 +7,15 @@ import { NavLink } from "react-router-dom";
 
 import plus from "./plus.png";
 import NavProfile from "../NavProfile/NavProfile";
-import { useBalance } from "../../helpers/BalanceContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setBalance } from "../../redux/balanceSlice";
 
 function Nav() {
     const [modalInfoIsOpen, setModalInfoIsOpen] = useState(false);
     const [navProfileIsOpen, setNavProfileIsOpen] = useState(false);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
-    const [balance, setBalance] = useBalance(0);
+    const dispatch = useDispatch();
+    const balance = useSelector((state) => state.balance.value);
 
     const handleLoginSuccess = (newToken) => {
         setToken(newToken);
@@ -27,33 +29,36 @@ function Nav() {
 
 
     useEffect(() => {
-        const socket = new WebSocket("ws://localhost:8000/balance");
+        if (!token) return;
 
-        socket.onopen = () => {
-            socket.send(JSON.stringify({ type: "authenticate", token }));
+        const fetchBalance = async () => {
+            try {
+                const response = await fetch("http://localhost:8000/api/account/balance", {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch balance");
+                }
+
+                const data = await response.json();
+                dispatch(setBalance(data.user_balance));
+            } catch (error) {
+                console.error("Error fetching balance:", error);
+            }
         };
 
-        socket.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            setBalance(message.balance)
-        };
+        // Первоначальное получение баланса
+        fetchBalance();
 
-        socket.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
+        const intervalId = setInterval(fetchBalance, 100);
 
-        socket.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
+        return () => clearInterval(intervalId);
+    }, [dispatch, token]);
 
-        socket.onclose = () => {
-            console.log("WebSocket connection closed");
-        };
-
-        return () => {
-            socket.close();
-        };
-    }, [setBalance]);
 
     return (
         <nav className="nav">

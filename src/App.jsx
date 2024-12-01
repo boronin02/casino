@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Nav from './components/Nav/Nav';
 import Transaction from './pages/Transaction';
-import Slot from './pages/Slot';
 import Home from './pages/Home';
 import Footer from './components/Footer/Footer';
 import Rocket from './pages/Rocket';
