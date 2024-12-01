@@ -3,8 +3,11 @@ import timerImg from './../img/timer.png';
 import plus from './../img/plus.png';
 import minus from './../img/minus.png';
 import { useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const Rocket = () => {
+
+    const balance = useSelector((state) => state.balance.value);
 
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const [x, setX] = useState(1);
@@ -16,6 +19,7 @@ const Rocket = () => {
         parseInt(localStorage.getItem("betMoney"), 10) || 50
     );
     const gameTimeout = useRef(null);
+    const [conclusions, setConclusions] = useState([])
 
     const startGame = () => {
         clearTimeout(gameTimeout.current);
@@ -61,47 +65,51 @@ const Rocket = () => {
             .catch((error) => console.log('Error fetching crash result:', error));
     };
 
+    const endGame = () => {
+        setConclusions((prevConclusions) => [
+            x.toFixed(2),
+            ...prevConclusions.slice(0, 15),
+        ]);
+    }
+
     // Обновляем коэффициент x в процессе игры
     useEffect(() => {
         if (!gameStarted || crashed || crashPoint === null) return;
 
-        const interval = setInterval(() => {
-            setX((prev) => {
-                const nextX = prev + 0.01;
-                if (nextX >= crashPoint) {
-                    setCrashed(true);
-                    clearInterval(interval);
-                    return crashPoint;
-                }
-                return nextX;
-            });
-        }, 50);
+        let startTime = null; // Начальное время анимации
+        const totalDuration = crashPoint * 1000; // Общее время до crashPoint
 
-        return () => clearInterval(interval);
+        const animate = (timestamp) => {
+            if (!startTime) startTime = timestamp; // Устанавливаем стартовое время
+            const elapsed = timestamp - startTime; // Время, прошедшее с начала
+
+            // Расчёт нового значения x
+            const progress = Math.min(elapsed / totalDuration, 1); // От 0 до 1
+            const nextX = 1 + progress * (crashPoint - 1); // Интерполяция от 1 до crashPoint
+
+            setX(nextX);
+
+            // Останавливаем анимацию, если достигли crashPoint
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                setCrashed(true);
+            }
+        };
+
+        // Запускаем анимацию
+        const animationId = requestAnimationFrame(animate);
+
+        return () => cancelAnimationFrame(animationId); // Чистим при размонтировании
     }, [gameStarted, crashed, crashPoint]);
+
+
+
 
     // Синхронизация баланса с локальным хранилищем
     useEffect(() => {
         localStorage.setItem('betMoney', betMoney);
     }, [betMoney]);
-
-    // Получение текущего баланса при загрузке
-    useEffect(() => {
-        if (!token) return;
-
-        fetch('http://localhost:8000/api/user/balance', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setBetMoney(data.balance);
-            })
-            .catch((error) => console.log('Error fetching balance:', error));
-    }, [token]);
 
     // Создание игры
     useEffect(() => {
@@ -150,7 +158,7 @@ const Rocket = () => {
 
                         <div className="betting-main">
                             <ul className="history__list">
-                                {ratios.map((ratio, index) => (
+                                {conclusions.map((ratio, index) => (
                                     <li className="history__item" key={index}>
                                         <p
                                             className="name"
@@ -272,7 +280,10 @@ const Rocket = () => {
                                     </div>
                                 </div>
                                 <div className="bottom__btn-bottom--right">
-                                    <button onClick={startGame}>Ставка</button>
+                                    {
+                                        gameStarted ? <button onClick={endGame}>Вывод</button> : <button onClick={startGame}>Ставка</button>
+                                    }
+
                                 </div>
                             </div>
                         </div>
