@@ -5,6 +5,7 @@ import Transaction from './pages/Transaction';
 import Home from './pages/Home';
 import Footer from './components/Footer/Footer';
 import Rocket from './pages/Rocket';
+import Account from './pages/Account';
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/transaction" element={<Transaction />} />
           <Route path='/' element={<Home />} />
           <Route path='/rocket' element={<Rocket />} />
+          <Route path='/account' element={<Account />} />
         </Routes>
         <Footer />
       </Router>

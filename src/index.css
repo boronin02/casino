@@ -487,7 +487,7 @@ footer {
 
     border-radius: 10px;
     padding: 0 10px;
-    /* Добавляет отступы по горизонтали */
+
     height: 25px;
     background: #231d47;
 
@@ -497,5 +497,79 @@ footer {
     font-family: "Manrope", sans-serif;
 
     white-space: nowrap;
-    /* Гарантирует, что текст не будет переноситься */
+}
+
+.account__img {
+    width: 150px;
+    height: 150px;
+}
+
+.account {
+    margin: 0 auto;
+    width: 870px;
+    color: #fff;
+    font-family: "DM Sans", serif;
+}
+
+.account__data {
+    display: flex;
+    align-items: center;
+}
+
+.history {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.history h2 {
+    font-size: 24px;
+    padding-bottom: 25px;
+}
+
+.history__table,
+.history__game {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.history__table div {
+    height: 40px;
+    border-radius: 2px;
+    padding: 11px 12px 10px 12px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.history__game p {
+    height: 40px;
+    border-radius: 2px;
+    padding: 11px 12px 10px 12px;
+    background: rgba(96, 109, 142, 0.2);
+}
+
+.history__table .game {
+    width: 161px;
+}
+
+.game__id {
+    width: 236px;
+}
+
+.bet {
+    width: 144px;
+}
+
+.coefficient {
+    width: 119px;
+}
+
+.amount {
+    width: 144px;
+}
+
+.history__game .game {
+    width: 161px;
 }

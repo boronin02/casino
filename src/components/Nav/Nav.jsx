@@ -22,12 +22,6 @@ function Nav() {
         localStorage.setItem("token", newToken);
     };
 
-    const handleLogout = () => {
-        setToken(null);
-        localStorage.removeItem("token");
-    };
-
-
     useEffect(() => {
         if (!token) return;
 
@@ -83,15 +77,11 @@ function Nav() {
                                     text={balance === 0 ? "" : balance}
                                 />
                             </NavLink>
+
                             <Button
                                 className="button__account-balance"
                                 text="Профиль"
                                 onClick={() => setNavProfileIsOpen(true)}
-                            />
-                            <Button
-                                className="button__account"
-                                text="Выйти"
-                                onClick={handleLogout}
                             />
                         </>
                     ) : (
