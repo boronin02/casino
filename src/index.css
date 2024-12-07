@@ -42,14 +42,14 @@ footer {
 }
 
 .main__content p {
-    width: 426px;
+    width: 458px;
     height: 127px;
     line-height: 1.15;
 
     font-size: 24px;
     font-weight: 500;
     color: #fff;
-    font-family: "DM Sans", serif;
+    font-family: "Manrope", sans-serif;
     user-select: none;
 }
 
@@ -115,10 +115,6 @@ footer {
     background-color: #fff;
     box-shadow: 0px 5px 35px rgba(0, 0, 0, .25);
     border-radius: 10px;
-}
-
-.slot a {
-    text-decoration: none;
 }
 
 .slot p {
@@ -434,8 +430,8 @@ footer {
 
 .btn-ratio input {
     border-radius: 8px;
-    padding: 8px 41px 8px 41px;
-    width: 181px;
+    padding: 8px 8px 8px 21px;
+    width: 79px;
     height: 30px;
     background-color: #1c1537;
     border: none;
@@ -448,7 +444,7 @@ footer {
 .bottom__btn-bottom--left .top {
     display: flex;
 
-    gap: 51px;
+    gap: 26px;
     padding-bottom: 10px;
 }
 
@@ -466,9 +462,21 @@ footer {
     font-family: "Manrope", sans-serif;
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    /* Для Firefox */
+}
+
+
 .bottom {
     display: flex;
-    gap: 5px;
+    gap: 8px;
 }
 
 .wrapper__img {
@@ -507,13 +515,24 @@ footer {
 .account {
     margin: 0 auto;
     width: 870px;
+
     color: #fff;
     font-family: "DM Sans", serif;
 }
 
 .account__data {
+    margin: 30px 0 30px 0;
     display: flex;
     align-items: center;
+    height: 100%;
+    gap: 30px;
+}
+
+.account__data--text {
+    display: flex;
+    flex-direction: column;
+    font-size: 30px;
+    gap: 10px;
 }
 
 .history {
@@ -522,6 +541,30 @@ footer {
     justify-content: center;
     align-items: center;
     gap: 6px;
+    font-family: "Manrope", sans-serif;
+}
+
+.button__account-balance {
+    display: flex;
+    justify-content: space-between;
+    /* Разделяем текст и изображение */
+    align-items: center;
+
+    padding: 10px;
+    width: 142px;
+    height: 48px;
+    background-color: #171718;
+    border: 1px solid #C0C0C0;
+    border-radius: 7px;
+
+    color: #fff;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0.01em;
+
+    cursor: pointer;
+    transition: 0.4s ease-in-out;
 }
 
 .history h2 {
@@ -572,4 +615,102 @@ footer {
 
 .history__game .game {
     width: 161px;
+}
+
+.btn-ratio__text {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: center;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+}
+
+.switches,
+.transaction-switches {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    font-family: "Manrope", sans-serif;
+}
+
+.switches {
+    margin-bottom: 30px;
+}
+
+.transaction-switches {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.data {
+    width: 161px;
+}
+
+.method {
+    width: 236px;
+}
+
+.amount {
+    width: 144px;
+}
+
+
+
+
+
+
+
+.avatar-container {
+    position: relative;
+    width: 150px;
+    /* Задайте размер аватара */
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.account__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: opacity 0.3s ease;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 0 0 50% 50%;
+}
+
+.overlay label {
+    cursor: pointer;
+    z-index: 1;
+}
+
+.overlay input {
+    display: none;
+    /* Скрываем input */
+}
+
+.avatar-container:hover .overlay {
+    opacity: 1;
+}
+
+.avatar-container:hover .account__img {
+    opacity: 0.8;
 }

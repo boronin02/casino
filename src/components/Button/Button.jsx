@@ -4,8 +4,8 @@ function Button(props) {
     return (
         <button
             onClick={props.onClick}
-            className="button__account-balance">
-            <span style={{ flex: 1, textAlign: "center" }}>{props.text}</span> {/* Текст выравниваем по центру */}
+            className={props.className}>
+            <span style={{ flex: 1, textAlign: "center" }}>{props.text}</span>
             {props.img && <img src={props.img} alt="" />}
         </button>
 

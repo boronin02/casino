@@ -13,7 +13,7 @@ const Home = () => {
                     <div className="main__content">
                         <p>Наша задача - это разными схемами обмануть это <span style={{
                             color: '#5C62EC'
-                        }}>грёбаное</span> казино и заработать деньги. Мы не рискуем, мы не входим в азарт. Поставили, <span style={{ color: '#5C62EC' }}>забрали</span>.</p>
+                        }}>грёбаное</span> казино и заработать деньги. Мы не рискуем, мы не входим в азарт. Поставили, <span style={{ color: '#5C62EC' }}>забрали</span></p>
                         <img src={person} alt="человек летает" />
                     </div>
                 </div>
@@ -22,19 +22,19 @@ const Home = () => {
                     <div className="game-content">
                         <h1 id="Game" className="game__header">Игры</h1>
                         <ul className="slots">
-                            <NavLink to='/rocket'>
+                            <NavLink to='/rocket' style={{ textDecoration: 'none' }}>
                                 <li className="slot">
-                                    <a>
+                                    <a className="slot__link">
                                         <img src={img1} alt="превью" />
                                         <p>Ракетка</p>
                                     </a>
                                 </li>
                             </NavLink>
 
-                            <li className="slot">
-                                <a href="/">
+                            <li className="slot" >
+                                <a href="/" style={{ textDecoration: 'none' }}>
                                     <img src={img1} alt="превью" />
-                                    <p>Не ракетка</p>
+                                    <p >Не ракетка</p>
                                 </a>
                             </li>
                         </ul>

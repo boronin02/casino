@@ -4,7 +4,6 @@ import Button from "../Button/Button";
 import Input from "../Input/Input";
 import "./UserAccess.css";
 import { signUp, signIn } from "./Api";
-import Balance from "../Balance/Balance";
 
 function UserAccess({ isOpen, onClose, onLoginSuccess }) {
     const [registration, setRegistration] = useState({
@@ -136,7 +135,7 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                                     onChange={handleInputChange}
                                 />
                                 <Button
-                                    className="button__register button"
+                                    className="button__register"
                                     text="Зарегистрироваться"
                                     onClick={handleRegisterBtnClick}
                                 />
@@ -163,7 +162,7 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                                     onChange={handleInputChange}
                                 />
                                 <Button
-                                    className="button__register button"
+                                    className="button__register"
                                     text="Войти"
                                     onClick={handleLoginBtnClick}
                                 />

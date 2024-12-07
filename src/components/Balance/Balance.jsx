@@ -61,7 +61,7 @@ function Balance({ token }) {
                     onChange={handleInputChange}
                 />
                 <Button
-                    className="button__register button"
+                    className="button__register-balance"
                     text="Отправить"
                     onClick={handleRegisterBtnClick}
                 />

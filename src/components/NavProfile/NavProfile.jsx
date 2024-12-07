@@ -26,10 +26,12 @@ const NavProfile = ({ isOpen, onClose }) => {
                         <div className="container-account">
                             <NavLink to="/account" style={{ textDecoration: "none" }}>
                                 <Button
-                                    text="Настройки" />
+                                    text="Настройки"
+                                    className="container-account-button" />
                             </ NavLink>
                             <Button
                                 text="Выйти"
+                                className="container-account-button"
                                 onClick={handleLogout}
                             />
                         </div>

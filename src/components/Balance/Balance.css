@@ -37,7 +37,7 @@
 }
 
 /* Стиль для кнопки */
-.button__register {
+.button__register-balance {
     background-color: #4CAF50;
     color: white;
     font-weight: bold;
@@ -50,11 +50,11 @@
     transition: background-color 0.3s ease;
 }
 
-.button__register:hover {
+.button__register-balance:hover {
     background-color: #45a049;
 }
 
-.button__register:active {
+.button__register-balance:active {
     background-color: #3c8d40;
 }
 
