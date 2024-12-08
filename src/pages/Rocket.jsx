@@ -6,6 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const Rocket = () => {
+    window.scrollTo(0, 0)
+
     const balance = useSelector((state) => state.balance.value);
 
     const [token, setToken] = useState(localStorage.getItem("token") || null);

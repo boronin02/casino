@@ -3,7 +3,7 @@ import Heading from "../Heading/Heading";
 import Button from "../Button/Button";
 import "./Nav.css";
 import UserAccess from "../UserAccess/UserAccess";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import plus from "./plus.png";
 import NavProfile from "../NavProfile/NavProfile";
@@ -16,6 +16,7 @@ function Nav() {
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const dispatch = useDispatch();
     const balance = useSelector((state) => state.balance.value);
+    const location = useLocation(); // Получаем текущий путь
 
     const handleLoginSuccess = (newToken) => {
         setToken(newToken);
@@ -63,9 +64,11 @@ function Nav() {
                     </div>
                 </NavLink>
                 <div className="header-middle">
-                    <a href="#Game" style={{ textDecoration: "none" }}>
-                        <Heading className="header-middle-text" text="Игры" level="h2" />
-                    </a>
+                    {location.pathname === "/" && (
+                        <a href="#Game" style={{ textDecoration: "none" }}>
+                            <Heading className="header-middle-text" text="Игры" level="h2" />
+                        </a>
+                    )}
                 </div>
                 <div className="header-right">
                     {token ? (

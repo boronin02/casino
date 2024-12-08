@@ -41,6 +41,73 @@ footer {
     justify-content: center;
 }
 
+/* Основной контейнер */
+.home-container {
+    display: flex;
+    position: relative;
+    transition: margin-left 0.3s ease;
+}
+
+.home-container.chat-open {
+    margin-left: -300px;
+    /* Сдвиг основного контента влево */
+}
+
+/* Кнопка открытия чата */
+.chat-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #5C62EC;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 1000;
+    transition: background-color 0.3s;
+}
+
+.chat-toggle:hover {
+    background-color: #4b50d6;
+}
+
+/* Контейнер чата */
+.chat-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 300px;
+    height: 100vh;
+    background-color: #f4f4f4;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    z-index: 999;
+}
+
+.home-container.chat-open .chat-container {
+    transform: translateX(0);
+}
+
+/* Шапка чата */
+.chat-header {
+    background-color: #5C62EC;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Контент чата */
+.chat-content {
+    padding: 20px;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+}
+
+
 .main__content p {
     width: 458px;
     height: 127px;
@@ -129,21 +196,6 @@ footer {
     width: 562px;
     margin-bottom: 22px;
     border-radius: 10px;
-}
-
-/* Footer */
-
-.footer__container {
-    padding: 60px 0;
-    width: 1920px;
-    height: 100%;
-    background-color: #171718;
-}
-
-.footer__content {
-    display: flex;
-    justify-content: center;
-    color: #fff;
 }
 
 /* Слот ракетка */
