@@ -37,7 +37,6 @@
 
     display: flex;
     justify-content: space-between;
-    /* Разделяем текст и изображение */
     align-items: center;
 
     padding: 10px;

@@ -8,7 +8,6 @@
 }
 
 /* Окно авторизации */
-
 .container-body {
     position: fixed;
     top: 0;
@@ -42,10 +41,16 @@
 }
 
 .registration-head {
+    margin-bottom: 10px;
     font-size: 24px;
     color: #000;
-    font-weight: 500;
+    font-family: "Manrope", sans-serif;
+    font-weight: 700;
     letter-spacing: 0.9px;
+}
+
+.welcome {
+    color: #fff;
 }
 
 

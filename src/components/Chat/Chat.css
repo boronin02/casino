@@ -1,15 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
 .chat-container {
     margin-top: 65px;
     position: fixed;
     top: 0;
     right: -300px;
     width: 300px;
-    height: 100vh;
-    background-color: #f4f4f4;
+    height: 94%;
+    background-color: #1b1b1b;
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
     z-index: 99;
     overflow-y: auto;
     transition: right 0.3s ease;
+    font-family: "Manrope", sans-serif;
 }
 
 .chat-container.open {
@@ -17,7 +20,7 @@
 }
 
 .chat-header {
-    background-color: #5C62EC;
+    background: radial-gradient(223% 105.53% at 6.05% 199.17%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(31.68% 130.91% at 100% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(43.14% 139.47% at 0% 136.21%, rgba(227, 235, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(170deg, rgb(64, 22, 160) 7.99%, rgb(63, 89, 228) 93.36%);
     color: white;
     padding: 10px;
     display: flex;
@@ -26,5 +29,114 @@
 }
 
 .chat-content {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 10px 10px 15px 10px;
+    max-height: calc(100% - 92px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #5C62EC #f4f4f4;
+}
+
+.chat-content::-webkit-scrollbar {
+    width: 1px;
+    /* Ширина полосы прокрутки */
+}
+
+.chat-content::-webkit-scrollbar-track {
+    background: #f4f4f4;
+}
+
+.chat-content::-webkit-scrollbar-thumb {
+    background-color: #5C62EC;
+    border-radius: 3px;
+}
+
+.chat-message {
+    display: flex;
+    align-items: center;
+    margin-bottom: 17px;
+    height: 40px;
+    gap: 10px;
+}
+
+.chat-message.user {
+    color: white;
+}
+
+.chat-message.server {
+    justify-content: flex-start;
+    color: white;
+}
+
+.chat-message.user .chat-text {
+    border-radius: 15px 15px 15px 0;
+    max-width: 60%;
+}
+
+.chat-message.server .chat-text {
+    background-color: #2196f3;
+    border-radius: 15px 15px 15px 0;
+    max-width: 60%;
+}
+
+.chat-text {
+    padding-top: 5px;
+}
+
+.chat-username {
+    width: 100%;
+    font-weight: 700;
+    color: #0078d7;
+    font-size: 15px;
+}
+
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.chat-input {
+    display: flex;
+    gap: 10px;
     padding: 10px;
+    background-color: #1b1b1b;
+    position: absolute;
+    bottom: 10px;
+    margin: 0 auto;
+
+}
+
+.chat-input input {
+    width: 100%;
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.chat-input button {
+    padding: 6px 13px;
+    background: radial-gradient(223% 105.53% at 6.05% 199.17%, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(31.68% 130.91% at 100% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%), radial-gradient(43.14% 139.47% at 0% 136.21%, rgba(227, 235, 255, 0.3) 0%, rgba(255, 255, 255, 0) 100%), linear-gradient(170deg, rgb(64, 22, 160) 7.99%, rgb(63, 89, 228) 93.36%);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chat-input button:hover {
+    background-color: #005bb5;
+}
+
+.mess {
+    display: flex;
+    flex-direction: column;
 }

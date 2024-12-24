@@ -16,6 +16,6 @@ export const getBalance = async (token) => {
         return data.balance;
     } catch (error) {
         console.error('Error fetching balance:', error);
-        throw error; // Пробрасываем ошибку для обработки в компоненте
+        throw error;
     }
 };

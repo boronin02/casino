@@ -18,12 +18,13 @@
     align-items: center;
 }
 
-.container-head h1 {
+.header-left {
     font-family: "Rubik Mono One", monospace;
     font-size: 24px;
     color: #fff;
     font-weight: 500;
     letter-spacing: 0.9px;
+    user-select: none;
 }
 
 .container-head h1 span {
@@ -39,6 +40,7 @@
 }
 
 .header-right {
+    user-select: none;
     display: flex;
     flex-direction: row;
     gap: 5px;
@@ -106,7 +108,7 @@
     line-height: 2.4rem;
     justify-content: center;
     padding: 1.2rem 3.2rem;
-    width: 160px;
+    width: 148px;
     height: 48px;
     text-decoration: none;
     transition: 0.4s ease-in-out;
@@ -125,11 +127,9 @@
 }
 
 /* Кнопки после входа */
-
 .button__account-balance {
     display: flex;
     justify-content: space-between;
-    /* Разделяем текст и изображение */
     align-items: center;
 
     padding: 10px;
@@ -151,11 +151,8 @@
 
 .button__account-balance img {
     margin-right: 8px;
-    /* Отступ между текстом и изображением */
     height: 24px;
-    /* Устанавливаем размер изображения */
     width: auto;
-    /* Сохраняем пропорции изображения */
 }
 
 

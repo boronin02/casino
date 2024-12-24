@@ -2,18 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Chat.css';
 
 const Chat = ({ isChatOpen, toggleChat }) => {
-    const [messages, setMessages] = useState([]); // Список сообщений
-    const [input, setInput] = useState(''); // Ввод пользователя
-    const [status, setStatus] = useState('Отключено'); // Статус WebSocket
-    const socketRef = useRef(null); // Ссылка на WebSocket
-    const [token, setToken] = useState(localStorage.getItem("token") || null);
+    const [messages, setMessages] = useState(() => {
+        const savedMessages = localStorage.getItem('chatMessages');
+        return savedMessages ? JSON.parse(savedMessages) : [];
+    });
+    const [input, setInput] = useState('');
+    const [status, setStatus] = useState('Отключено');
+    const socketRef = useRef(null);
+    const token = localStorage.getItem('token') || null;
 
     useEffect(() => {
-        socketRef.current = new WebSocket('ws://localhost:8000/chat', 'protocol', {
-            headers: { 'Authorization': `Bearer ${token}`, }
-        });
+        if (!token) return;
 
-        //socketRef.current = new WebSocket(`ws://localhost:8000/api/chat?token=${token}`)
+        socketRef.current = new WebSocket(`ws://localhost:8000/ws/chat?token=${token}`);
 
         socketRef.current.onopen = () => {
             console.log('WebSocket соединение установлено');
@@ -21,8 +22,27 @@ const Chat = ({ isChatOpen, toggleChat }) => {
         };
 
         socketRef.current.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            setMessages((prev) => [...prev, message]);
+            try {
+                const rawMessage = JSON.parse(event.data);
+
+                if (rawMessage.message) {
+                    const parsedMessage = JSON.parse(rawMessage.message);
+                    const fullAvatarUrl = `http://localhost:8000${rawMessage.avatar_url}`;
+                    const message = {
+                        name: rawMessage.name,
+                        avatar_url: fullAvatarUrl,
+                        ...parsedMessage,
+                    };
+
+                    setMessages((prev) => {
+                        const updatedMessages = [...prev, message].slice(-15);
+                        localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+                        return updatedMessages;
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка парсинга сообщения:', error);
+            }
         };
 
         socketRef.current.onclose = () => {
@@ -40,15 +60,21 @@ const Chat = ({ isChatOpen, toggleChat }) => {
                 socketRef.current.close();
             }
         };
-    }, []);
+    }, [token]);
 
     const sendMessage = () => {
-        if (input.trim() && socketRef.current) {
-            const message = { text: input, sender: 'user', timestamp: Date.now() };
-            socketRef.current.send(JSON.stringify(message)); // Отправляем сообщение на сервер
-            setMessages((prev) => [...prev, message]); // Отображаем отправленное сообщение
-            setInput(''); // Очищаем поле ввода
-        }
+        if (!input.trim() || !socketRef.current || status !== 'Подключено') return;
+
+        const message = {
+            text: input,
+            event: 'message',
+            id: Date.now(),
+            sender: 'user',
+        };
+
+        socketRef.current.send(JSON.stringify(message));
+
+        setInput('');
     };
 
     return (
@@ -63,10 +89,15 @@ const Chat = ({ isChatOpen, toggleChat }) => {
                 <div className="chat-messages">
                     {messages.map((msg, index) => (
                         <div key={index} className={`chat-message ${msg.sender === 'user' ? 'user' : 'server'}`}>
-                            <span className="chat-text">{msg.text}</span>
+                            <img src={msg.avatar_url} alt={msg.name} className="avatar" />
+                            <div className="mess">
+                                <span className="chat-username">{msg.name}</span>
+                                <span className="chat-text">{msg.text}</span>
+                            </div>
                         </div>
                     ))}
                 </div>
+
                 <div className="chat-input">
                     <input
                         type="text"

@@ -16,7 +16,7 @@ function Nav() {
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const dispatch = useDispatch();
     const balance = useSelector((state) => state.balance.value);
-    const location = useLocation(); // Получаем текущий путь
+    const location = useLocation();
 
     const handleLoginSuccess = (newToken) => {
         setToken(newToken);

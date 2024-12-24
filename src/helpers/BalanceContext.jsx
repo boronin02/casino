@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 
-// Создаём контекст для баланса
+// контекст для баланса
 const BalanceContext = createContext();
 
 // Провайдер контекста

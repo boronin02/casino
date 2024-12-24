@@ -32,8 +32,7 @@ const Rocket = () => {
         setCrashPoint(null);
 
         // Ожидание перед началом игры
-
-        setWaiting(false); // Убираем состояние ожидания
+        setWaiting(false);
         fetch('http://localhost:8000/api/game/bet', {
             method: 'POST',
             headers: {
@@ -68,7 +67,6 @@ const Rocket = () => {
                 }, data.crash_point * 1000);
             })
             .catch((error) => console.log('Error fetching crash result:', error));
-
     };
 
     const createGame = () => {

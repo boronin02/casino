@@ -82,6 +82,7 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                 console.log('Успех:', data);
                 onLoginSuccess(token);
                 onClose();
+                location.reload()
             })
             .catch(error => console.error('Ошибка:', error));
     };
@@ -144,7 +145,7 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
 
                         <div className="form-container sign-in">
                             <form>
-                                <Heading className='form-head' text='Вход в аккаунт' level='h1' />
+                                <Heading className='registration-head' text='Вход в аккаунт' level='h1' />
                                 <Input
                                     className="registration__input"
                                     type="text"
@@ -172,7 +173,7 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                         <div className="toggle-container">
                             <div className="toggle">
                                 <div className="toggle-panel toggle-left">
-                                    <Heading className='registration-head' text='С возвращением!' level='h1' />
+                                    <Heading className='registration-head welcome' text='С возвращением!' level='h1' />
                                     <p>Введите свои личные данные, чтобы использовать все функции сайта</p>
                                     <Button className="button__register" text="Войти в аккаунт" onClick={toggleForm} />
                                 </div>

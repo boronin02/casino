@@ -11,9 +11,9 @@ import Chat from './components/Chat/Chat';
 
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
 
   const toggleChat = () => {
-    console.log("Чат открыт:", !isChatOpen); // Отладочная строка
     setIsChatOpen(!isChatOpen);
   };
 
@@ -30,10 +30,13 @@ function App() {
           </Routes>
           <Footer />
 
-
-          <button className="chat-toggle" onClick={toggleChat}>
-            {isChatOpen ? "Закрыть чат" : "Открыть чат"}
-          </button>
+          {
+            token ? (
+              <button className="chat-toggle" onClick={toggleChat}>
+                {isChatOpen ? "Закрыть чат" : "Открыть чат"}
+              </button>
+            ) : ''
+          }
 
           <Chat isChatOpen={isChatOpen} toggleChat={toggleChat} />
         </div>
