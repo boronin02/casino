@@ -6,33 +6,62 @@ import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 const Rocket = () => {
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
 
     const balance = useSelector((state) => state.balance.value);
-
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const [x, setX] = useState(1);
     const [crashed, setCrashed] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
-    const [crashPoint, setCrashPoint] = useState(null);
+    const [crashPoint, setCrashPoint] = useState(1);
     const [ratios, setRatios] = useState([]);
-    const [betMoney, setBetMoney] = useState(
-        parseInt(localStorage.getItem("betMoney"), 50) || 50
-    );
-    const [waiting, setWaiting] = useState(false); // Состояние ожидания ставок
-    const gameTimeout = useRef(null);
+    const [betMoney, setBetMoney] = useState(50);
+    const socketRef = useRef(null);
     const [conclusions, setConclusions] = useState([]);
 
-    const startGame = () => {
+    useEffect(() => {
+        // Установить соединение WebSocket
+        socketRef.current = new WebSocket('ws://localhost:8000/ws/crash');
+
+        socketRef.current.onopen = () => {
+            console.log('WebSocket соединение установлено');
+        };
+
+        socketRef.current.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            console.log(message)
+            if (message.name === "crash") {
+                if (message.result === "start") {
+                    startRound();
+                } else if (message.result === "stop") {
+                    endRound();
+                }
+            }
+        };
+
+        socketRef.current.onerror = (error) => {
+            console.error('WebSocket ошибка:', error);
+        };
+
+        socketRef.current.onclose = () => {
+            console.log('WebSocket соединение закрыто');
+        };
+
+        return () => {
+            if (socketRef.current) {
+                socketRef.current.close();
+            }
+        };
+    }, []);
+
+    const startRound = () => {
         if (balance <= 50) return;
 
-        clearTimeout(gameTimeout.current);
         setCrashed(false);
-        setX(1);
-        setCrashPoint(null);
+        setX(1); // Сброс начального значения
+        setGameStarted(true);
+        setConclusions([])
 
-        // Ожидание перед началом игры
-        setWaiting(false);
         fetch('http://localhost:8000/api/game/bet', {
             method: 'POST',
             headers: {
@@ -43,30 +72,47 @@ const Rocket = () => {
                 bet_amount: betMoney,
             }),
         })
-            .then((response) => response.json())
-            .then(() => {
-                return fetch('http://localhost:8000/api/game/crash/result', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-            })
+            .then(response => response.json())
+
+        fetch('http://localhost:8000/api/game/crash/result', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        })
             .then((response) => response.json())
             .then((data) => {
-                setCrashPoint(data.crash_point);
-                setGameStarted(true);
+                const crash = data.crash_point;
+                console.log(crash)
+                setCrashPoint(crash);
 
-                gameTimeout.current = setTimeout(() => {
-                    setCrashed(true);
-                    setRatios((prevRatios) => [
-                        data.crash_point.toFixed(2),
-                        ...prevRatios.slice(0, 9),
-                    ]);
-                }, data.crash_point * 1000);
+                // Увеличиваем `x` до `crashPoint`
+                const interval = setInterval(() => {
+                    setX((prevX) => {
+                        if (prevX >= crash) {
+                            clearInterval(interval);
+                            setCrashed(true);
+                            setGameStarted(false); // Завершение игры
+                            setRatios((prevRatios) => [
+                                crash.toFixed(2),
+                                ...prevRatios.slice(0, 9),
+                            ]);
+                            return prevX; // Останавливаем увеличение
+                        }
+                        return prevX + 0.01; // Увеличиваем `x`
+                    });
+                }, 10); // Увеличиваем каждые 10 мс
             })
-            .catch((error) => console.log('Error fetching crash result:', error));
+            .catch((error) => console.error('Ошибка получения crashPoint:', error));
+    };
+
+    const collectWinnings = () => {
+        setConclusions((prev) => [
+            { ratio: x.toFixed(2), bet: betMoney },
+            ...prev.slice(0, 19),
+        ]);
+        createGame();
     };
 
     const createGame = () => {
@@ -88,48 +134,16 @@ const Rocket = () => {
             .catch((error) => console.log('Error creating game:', error));
     };
 
-    const endGame = () => {
-        setConclusions((prevConclusions) => [
-            { ratio: x.toFixed(2), bet: betMoney },
-            ...prevConclusions.slice(0, 19),
-        ]);
-
-        createGame();
-
+    const endRound = () => {
         setGameStarted(false);
+        setCrashed(true);
     };
-
-    useEffect(() => {
-        if (!gameStarted || crashed || crashPoint === null) return;
-
-        let startTime = null;
-        const totalDuration = crashPoint * 1000;
-
-        const animate = (timestamp) => {
-            if (!startTime) startTime = timestamp;
-            const elapsed = timestamp - startTime;
-
-            const progress = Math.min(elapsed / totalDuration, 1);
-            const nextX = 1 + progress * (crashPoint - 1);
-
-            setX(nextX);
-
-            if (progress < 1) {
-                requestAnimationFrame(animate);
-            } else {
-                setCrashed(true);
-                setGameStarted(false);
-            }
-        };
-
-        const animationId = requestAnimationFrame(animate);
-
-        return () => cancelAnimationFrame(animationId);
-    }, [gameStarted, crashed, crashPoint]);
 
     const changeBet = (amount) => {
         setBetMoney((prev) => Math.max(50, Math.min(balance, prev + amount)));
     };
+
+
 
     return (
         <div className="rocket__container">
@@ -185,7 +199,7 @@ const Rocket = () => {
                     </div>
                     <div className="rocket__center-middle">
                         <p className="rocket__center-middle--text">
-                            {crashed ? crashPoint.toFixed(2) : x.toFixed(2)}
+                            {x.toFixed(2)}
                         </p>
                     </div>
                     <div className="rocket__center-bottom">
@@ -248,11 +262,15 @@ const Rocket = () => {
                                 </div>
                                 <div className="bottom__btn-bottom--right">
                                     <button
-                                        onClick={() => (gameStarted ? endGame() : startGame())}
+                                        onClick={() => {
+                                            if (!gameStarted) startRound();
+                                            else collectWinnings();
+                                        }}
                                         className={`bottom__btn-bottom--action ${gameStarted ? 'end' : 'start'}`}
                                     >
                                         {gameStarted ? "Забрать" : "Сделать ставку"}
                                     </button>
+
                                 </div>
                             </div>
                         </div>

@@ -77,7 +77,7 @@ function Nav() {
                                 <Button
                                     img={plus}
                                     className="button__account-balance"
-                                    text={balance === 0 ? "" : balance}
+                                    text={balance === 0 ? "0" : balance}
                                 />
                             </NavLink>
 
