@@ -18,6 +18,9 @@ const Rocket = () => {
     const [betMoney, setBetMoney] = useState(50);
     const socketRef = useRef(null);
     const [conclusions, setConclusions] = useState([]);
+    const isClicked = useRef(false); // Флаг для отслеживания нажатий
+    const [betPlaced, setBetPlaced] = useState(false); // Флаг, был ли сделан бет
+    const [canCollect, setCanCollect] = useState(true); // Флаг для блокировки кнопки "Забрать"
 
     useEffect(() => {
         // Установить соединение WebSocket
@@ -29,7 +32,7 @@ const Rocket = () => {
 
         socketRef.current.onmessage = (event) => {
             const message = JSON.parse(event.data);
-            console.log(message)
+            console.log(message);
             if (message.name === "crash") {
                 if (message.result === "start") {
                     startRound();
@@ -54,13 +57,10 @@ const Rocket = () => {
         };
     }, []);
 
-    const startRound = () => {
-        if (balance <= 50) return;
-
-        setCrashed(false);
-        setX(1); // Сброс начального значения
-        setGameStarted(true);
-        setConclusions([])
+    const sendBet = () => {
+        if (isClicked.current) return; // Если уже был клик, прерываем выполнение
+        isClicked.current = true; // Устанавливаем флаг после первого клика
+        setBetPlaced(true); // Устанавливаем флаг "ставка сделана"
 
         fetch('http://localhost:8000/api/game/bet', {
             method: 'POST',
@@ -73,6 +73,14 @@ const Rocket = () => {
             }),
         })
             .then(response => response.json())
+            .catch((error) => console.error('Ошибка отправки ставки:', error));
+    }
+
+    const startRound = () => {
+        setCrashed(false);
+        setX(1); // Сброс начального значения
+        setGameStarted(true);
+        setConclusions([])
 
         fetch('http://localhost:8000/api/game/crash/result', {
             method: 'GET',
@@ -84,7 +92,7 @@ const Rocket = () => {
             .then((response) => response.json())
             .then((data) => {
                 const crash = data.crash_point;
-                console.log(crash)
+                console.log(crash);
                 setCrashPoint(crash);
 
                 // Увеличиваем `x` до `crashPoint`
@@ -93,7 +101,7 @@ const Rocket = () => {
                         if (prevX >= crash) {
                             clearInterval(interval);
                             setCrashed(true);
-                            setGameStarted(false); // Завершение игры
+                            setCanCollect(false)
                             setRatios((prevRatios) => [
                                 crash.toFixed(2),
                                 ...prevRatios.slice(0, 9),
@@ -108,6 +116,9 @@ const Rocket = () => {
     };
 
     const collectWinnings = () => {
+        if (!canCollect) return; // Проверка на возможность сбора выигрыша
+        setCanCollect(false); // Блокируем возможность повторного нажатия
+
         setConclusions((prev) => [
             { ratio: x.toFixed(2), bet: betMoney },
             ...prev.slice(0, 19),
@@ -137,13 +148,13 @@ const Rocket = () => {
     const endRound = () => {
         setGameStarted(false);
         setCrashed(true);
+        isClicked.current = false;
+        setCanCollect(true)
     };
 
     const changeBet = (amount) => {
         setBetMoney((prev) => Math.max(50, Math.min(balance, prev + amount)));
     };
-
-
 
     return (
         <div className="rocket__container">
@@ -199,7 +210,7 @@ const Rocket = () => {
                     </div>
                     <div className="rocket__center-middle">
                         <p className="rocket__center-middle--text">
-                            {x.toFixed(2)}
+                            {gameStarted ? x.toFixed(2) : 'Ожидание ставок'}
                         </p>
                     </div>
                     <div className="rocket__center-bottom">
@@ -262,15 +273,19 @@ const Rocket = () => {
                                 </div>
                                 <div className="bottom__btn-bottom--right">
                                     <button
-                                        onClick={() => {
-                                            if (!gameStarted) startRound();
-                                            else collectWinnings();
-                                        }}
-                                        className={`bottom__btn-bottom--action ${gameStarted ? 'end' : 'start'}`}
+                                        onClick={sendBet}
+                                        disabled={balance <= 50}
+                                        className={`${gameStarted ? "bottom__btn-bottom--action" : ''}`}
                                     >
-                                        {gameStarted ? "Забрать" : "Сделать ставку"}
+                                        Сделать ставку
                                     </button>
-
+                                    <button
+                                        onClick={collectWinnings}
+                                        disabled={!betPlaced || !gameStarted || !canCollect} // Запрещаем забирать, если ставка не сделана, игра не началась или можно уже забирать
+                                        className={`${!gameStarted ? "bottom__btn-bottom--action" : ''}`}
+                                    >
+                                        Забрать
+                                    </button>
                                 </div>
                             </div>
                         </div>
