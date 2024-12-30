@@ -1,9 +1,13 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import "./Balance.css"
+import { updateBalance } from "../../redux/balanceUtils";
 
 function Balance({ token }) {
+    const dispatch = useDispatch();
+
     const [balance, setBalance] = useState({
         type: '',
         amount: ''
@@ -18,7 +22,7 @@ function Balance({ token }) {
     }
 
     function handleRegisterBtnClick() {
-        console.log('Токен перед отправкой:', token);
+        //console.log('Токен перед отправкой:', token);
         fetch('http://localhost:8000/api/transaction/create', {
             method: 'POST',
             headers: {
@@ -36,8 +40,11 @@ function Balance({ token }) {
                 }
                 return response.json();
             })
-            .then(data => console.log(data))
             .catch(error => console.log('Ошибка:', error));
+
+        if (token) {
+            dispatch(updateBalance(token));
+        }
     }
 
     return (

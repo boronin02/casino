@@ -9,49 +9,26 @@ import plus from "./plus.png";
 import NavProfile from "../NavProfile/NavProfile";
 import { useDispatch, useSelector } from "react-redux";
 import { setBalance } from "../../redux/balanceSlice";
+import { updateBalance } from "../../redux/balanceUtils";
 
 function Nav() {
     const [modalInfoIsOpen, setModalInfoIsOpen] = useState(false);
     const [navProfileIsOpen, setNavProfileIsOpen] = useState(false);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const dispatch = useDispatch();
+    // поулучение баланса
     const balance = useSelector((state) => state.balance.value);
     const location = useLocation();
 
     const handleLoginSuccess = (newToken) => {
-        setToken(newToken);
         localStorage.setItem("token", newToken);
+        dispatch(updateBalance(newToken)); // Обновляем баланс при успешном входе
     };
 
     useEffect(() => {
-        if (!token) return;
-
-        const fetchBalance = async () => {
-            try {
-                const response = await fetch("http://localhost:8000/api/account/balance", {
-                    method: "GET",
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch balance");
-                }
-
-                const data = await response.json();
-                dispatch(setBalance(data.user_balance));
-            } catch (error) {
-                console.error("Error fetching balance:", error);
-            }
-        };
-
-        // Первоначальное получение баланса
-        fetchBalance();
-
-        const intervalId = setInterval(fetchBalance, 100);
-
-        return () => clearInterval(intervalId);
+        if (token) {
+            dispatch(updateBalance(token)); // Обновляем баланс при загрузке
+        }
     }, [dispatch, token]);
 
 

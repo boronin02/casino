@@ -28,37 +28,37 @@ function App() {
     const wsWheel = new WebSocket('ws://localhost:8000/ws/wheel');
 
     ws.onopen = () => {
-      console.log('WebSocket соединение установлено');
+      //console.log('WebSocket соединение установлено');
     };
 
     wsWheel.onopen = () => {
-      console.log('WebSocket wheel соединение установлено');
+      //console.log('WebSocket wheel соединение установлено');
     };
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      console.log('Получено сообщение:', message);
+      //console.log('Получено сообщение:', message);
     };
 
     wsWheel.onmessage = (event) => {
       const messageWheel = JSON.parse(event.data);
-      console.log('Получено сообщение wheel:', messageWheel);
+      //console.log('Получено сообщение wheel:', messageWheel);
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket ошибка:', error);
+      //console.error('WebSocket ошибка:', error);
     };
 
     wsWheel.onerror = (error) => {
-      console.error('WebSocket wheel ошибка:', error);
+      //console.error('WebSocket wheel ошибка:', error);
     };
 
     ws.onclose = () => {
-      console.log('WebSocket соединение закрыто');
+      // console.log('WebSocket соединение закрыто');
     };
 
     wsWheel.onclose = () => {
-      console.log('WebSocket wheel соединение закрыто');
+      //console.log('WebSocket wheel соединение закрыто');
     };
 
     setSocket(ws);
@@ -75,7 +75,7 @@ function App() {
   return (<>
 
     <WebSocketContext.Provider value={{ socket, socketWheel }}>
-      <Router>
+      <Router future={{ v7_relativeSplatPath: true }}>
         <div className={`app-container ${isChatOpen ? 'chat-open' : ''}`}>
           <Nav />
           <Routes>

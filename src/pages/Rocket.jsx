@@ -5,11 +5,12 @@ import minus from './../img/minus.png';
 import { useEffect, useRef, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { WebSocketContext } from '../App';
+import { useDispatch } from "react-redux";
 
 const Rocket = () => {
     // Scroll to top on render
     window.scrollTo(0, 0);
-
+    const dispatch = useDispatch();
     // States
     const balance = useSelector((state) => state.balance.value);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
@@ -60,6 +61,7 @@ const Rocket = () => {
             },
             body: JSON.stringify({ bet_amount: betMoney }),
         }).catch((error) => console.error('Ошибка отправки ставки:', error));
+        dispatch(updateBalance(token));
     };
 
     // Start round
@@ -72,6 +74,7 @@ const Rocket = () => {
         intervalRef.current = setInterval(() => {
             setX((prevX) => prevX + 0.01); // Увеличиваем значение X
         }, 18); // Каждые 100 мс (10 шагов за секунду)
+
     };
 
     // useEffect(() => {
@@ -92,6 +95,7 @@ const Rocket = () => {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }
+        dispatch(updateBalance(token));
     };
 
     // Collect winnings
@@ -104,6 +108,7 @@ const Rocket = () => {
             ...prev.slice(0, 19), // Keep only the last 20 records
         ]);
         createGame();
+        dispatch(updateBalance(token));
     };
 
     // Create game entry
@@ -122,6 +127,7 @@ const Rocket = () => {
                 coefficient: parseFloat(x.toFixed(2)),
             }),
         }).catch((error) => console.log('Error creating game:', error));
+        dispatch(updateBalance(token));
     };
 
     // Change bet
