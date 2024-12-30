@@ -40,12 +40,14 @@ const Home = () => {
                             </li>
                         </NavLink>
 
-                        <li className="slot">
-                            <a href="/" style={{ textDecoration: 'none' }}>
-                                <img src={img1} alt="превью" />
-                                <p>Не ракетка</p>
-                            </a>
-                        </li>
+                        <NavLink to='/slotWheel' style={{ textDecoration: 'none' }}>
+                            <li className="slot">
+                                <a style={{ textDecoration: 'none' }}>
+                                    <img src={img1} alt="превью" />
+                                    <p>Не ракетка</p>
+                                </a>
+                            </li>
+                        </NavLink>
                     </ul>
                 </div>
             </div>

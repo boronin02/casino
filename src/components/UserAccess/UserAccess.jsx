@@ -74,18 +74,31 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
 
     const handleLoginBtnClick = (e) => {
         e.preventDefault();
+
         signIn(login)
             .then(data => {
-                const token = data.token;
-                setToken(token);
-                localStorage.setItem("token", token);
-                console.log('Успех:', data);
-                onLoginSuccess(token);
-                onClose();
-                location.reload()
+                if (data?.token) { // Проверяем, что token существует
+                    console.log('data', data);
+                    const token = data.token;
+                    setToken(token);
+                    localStorage.setItem("token", token);
+                    console.log('Успех:', data);
+                    onLoginSuccess(token);
+                    onClose();
+                    location.reload(); // Выполняем только в случае успеха
+                } else {
+                    throw new Error("Не удалось получить токен.");
+                }
             })
-            .catch(error => console.error('Ошибка:', error));
+            .catch(error => {
+                console.error('Ошибка:', error);
+                setErrors(prev => ({
+                    ...prev,
+                    login: error.response?.data?.message || "Неверный логин или пароль"
+                }));
+            });
     };
+
 
     useEffect(() => {
         console.log('Токен из localStorage:', token);
@@ -167,6 +180,7 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                                     text="Войти"
                                     onClick={handleLoginBtnClick}
                                 />
+                                {errors.login && <p className="error-message">{errors.login}</p>} {/* Отображение ошибки */}
                             </form>
                         </div>
 

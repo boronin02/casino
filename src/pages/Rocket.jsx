@@ -2,12 +2,15 @@ import timer from './../img/Container.png';
 import timerImg from './../img/timer.png';
 import plus from './../img/plus.png';
 import minus from './../img/minus.png';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
+import { WebSocketContext } from '../App';
 
 const Rocket = () => {
+    // Scroll to top on render
     window.scrollTo(0, 0);
 
+    // States
     const balance = useSelector((state) => state.balance.value);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const [x, setX] = useState(1);
@@ -16,51 +19,38 @@ const Rocket = () => {
     const [crashPoint, setCrashPoint] = useState(1);
     const [ratios, setRatios] = useState([]);
     const [betMoney, setBetMoney] = useState(50);
-    const socketRef = useRef(null);
     const [conclusions, setConclusions] = useState([]);
-    const isClicked = useRef(false); // Флаг для отслеживания нажатий
-    const [betPlaced, setBetPlaced] = useState(false); // Флаг, был ли сделан бет
-    const [canCollect, setCanCollect] = useState(true); // Флаг для блокировки кнопки "Забрать"
+    const [betPlaced, setBetPlaced] = useState(false);
+    const [canCollect, setCanCollect] = useState(true);
 
+    const { socket } = useContext(WebSocketContext);
+    const isClicked = useRef(false);
+
+    const intervalRef = useRef(null); // Ссылка на интервал
+
+    // WebSocket initialization
     useEffect(() => {
-        // Установить соединение WebSocket
-        socketRef.current = new WebSocket('ws://localhost:8000/ws/crash');
+        if (socket) {
+            console.log('Rocket: WebSocket доступен');
 
-        socketRef.current.onopen = () => {
-            console.log('WebSocket соединение установлено');
-        };
-
-        socketRef.current.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            console.log(message);
-            if (message.name === "crash") {
-                if (message.result === "start") {
-                    startRound();
-                } else if (message.result === "stop") {
-                    endRound();
+            const handleMessage = (event) => {
+                const message = JSON.parse(event.data);
+                if (message.name === "crash") {
+                    if (message.result === "start") startRound();
+                    else if (message.result === "stop") endRound();
                 }
-            }
-        };
+            };
 
-        socketRef.current.onerror = (error) => {
-            console.error('WebSocket ошибка:', error);
-        };
+            socket.addEventListener('message', handleMessage);
+            return () => socket.removeEventListener('message', handleMessage);
+        }
+    }, [socket]);
 
-        socketRef.current.onclose = () => {
-            console.log('WebSocket соединение закрыто');
-        };
-
-        return () => {
-            if (socketRef.current) {
-                socketRef.current.close();
-            }
-        };
-    }, []);
-
+    // Send bet request
     const sendBet = () => {
-        if (isClicked.current) return; // Если уже был клик, прерываем выполнение
-        isClicked.current = true; // Устанавливаем флаг после первого клика
-        setBetPlaced(true); // Устанавливаем флаг "ставка сделана"
+        if (isClicked.current) return;
+        isClicked.current = true;
+        setBetPlaced(true);
 
         fetch('http://localhost:8000/api/game/bet', {
             method: 'POST',
@@ -68,64 +58,55 @@ const Rocket = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify({
-                bet_amount: betMoney,
-            }),
-        })
-            .then(response => response.json())
-            .catch((error) => console.error('Ошибка отправки ставки:', error));
-    }
-
-    const startRound = () => {
-        setCrashed(false);
-        setX(1); // Сброс начального значения
-        setGameStarted(true);
-        setConclusions([])
-
-        fetch('http://localhost:8000/api/game/crash/result', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                const crash = data.crash_point;
-                console.log(crash);
-                setCrashPoint(crash);
-
-                // Увеличиваем `x` до `crashPoint`
-                const interval = setInterval(() => {
-                    setX((prevX) => {
-                        if (prevX >= crash) {
-                            clearInterval(interval);
-                            setCrashed(true);
-                            setCanCollect(false)
-                            setRatios((prevRatios) => [
-                                crash.toFixed(2),
-                                ...prevRatios.slice(0, 9),
-                            ]);
-                            return prevX; // Останавливаем увеличение
-                        }
-                        return prevX + 0.01; // Увеличиваем `x`
-                    });
-                }, 10); // Увеличиваем каждые 10 мс
-            })
-            .catch((error) => console.error('Ошибка получения crashPoint:', error));
+            body: JSON.stringify({ bet_amount: betMoney }),
+        }).catch((error) => console.error('Ошибка отправки ставки:', error));
     };
 
+    // Start round
+    const startRound = () => {
+        setCrashed(false);
+        setX(1);
+        setGameStarted(true);
+        setConclusions([]); // Обновление списка при старте новой игры
+
+        intervalRef.current = setInterval(() => {
+            setX((prevX) => prevX + 0.01); // Увеличиваем значение X
+        }, 18); // Каждые 100 мс (10 шагов за секунду)
+    };
+
+    // useEffect(() => {
+    //     if (!gameStarted && crashed) {
+    //         console.log("Финальное значение X:", x.toFixed(2));
+    //     }
+    // }, [gameStarted, crashed, x]);
+
+
+    // End round
+    const endRound = () => {
+        setGameStarted(false);
+        setCrashed(true);
+        isClicked.current = false;
+        setCanCollect(true);
+
+        if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+        }
+    };
+
+    // Collect winnings
     const collectWinnings = () => {
-        if (!canCollect) return; // Проверка на возможность сбора выигрыша
-        setCanCollect(false); // Блокируем возможность повторного нажатия
+        if (!canCollect) return;
+        setCanCollect(false);
 
         setConclusions((prev) => [
             { ratio: x.toFixed(2), bet: betMoney },
-            ...prev.slice(0, 19),
+            ...prev.slice(0, 19), // Keep only the last 20 records
         ]);
         createGame();
     };
 
+    // Create game entry
     const createGame = () => {
         if (!token || crashPoint === null) return;
 
@@ -140,18 +121,10 @@ const Rocket = () => {
                 bet_amount: parseFloat(betMoney),
                 coefficient: parseFloat(x.toFixed(2)),
             }),
-        })
-            .then((response) => response.json())
-            .catch((error) => console.log('Error creating game:', error));
+        }).catch((error) => console.log('Error creating game:', error));
     };
 
-    const endRound = () => {
-        setGameStarted(false);
-        setCrashed(true);
-        isClicked.current = false;
-        setCanCollect(true)
-    };
-
+    // Change bet
     const changeBet = (amount) => {
         setBetMoney((prev) => Math.max(50, Math.min(balance, prev + amount)));
     };
@@ -168,7 +141,7 @@ const Rocket = () => {
                         <div className="betting-top">
                             <div className="bettint-top-left">
                                 <p className="total-bets">Всего ставок:</p>
-                                <p className="total-count">26</p>
+                                <p className="total-count">{conclusions.length}</p>
                             </div>
                             <div className="last-round">
                                 <img src={timer} alt="timer" />
@@ -180,9 +153,7 @@ const Rocket = () => {
                                 {conclusions.map(({ ratio, bet }, index) => (
                                     <li className="history__item" key={index}>
                                         <p className="name" style={{ width: '58px', color: '#948ac5' }}>Игрок</p>
-                                        <p className="count" style={{ width: '60px', color: '#dfe5f2' }}>
-                                            {bet}р
-                                        </p>
+                                        <p className="count" style={{ width: '60px', color: '#dfe5f2' }}>{bet}р</p>
                                         <div className="mult-btn" style={{ width: '83px', color: '#fff' }}>
                                             <p>{ratio}x</p>
                                         </div>
