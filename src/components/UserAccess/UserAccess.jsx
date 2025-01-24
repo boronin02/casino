@@ -23,18 +23,42 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
     const [isSignUp, setIsSignUp] = useState(true);
     const [token, setToken] = useState(localStorage.getItem("token"));
 
+    // Функция для проверки срока действия токена
+    const checkTokenExpiration = () => {
+        const tokenExpiration = localStorage.getItem("token_expiration");
+        if (tokenExpiration && Date.now() > Number(tokenExpiration)) {
+            // Токен истек
+            localStorage.removeItem("token");
+            localStorage.removeItem("token_expiration");
+            setToken(null);
+            console.log("Токен истек и был удален.");
+            return false;
+        }
+        return true;
+    };
+
+    // Проверяем токен при загрузке компонента
+    useEffect(() => {
+        if (token) {
+            const isTokenValid = checkTokenExpiration();
+            if (!isTokenValid) {
+                onClose(); // Закрываем модальное окно, если токен истек
+            }
+        }
+    }, [token]);
+
     const handleInputChange = (event) => {
         const { name, value } = event.target;
 
         setRegistration({
             ...registration,
             [name]: value
-        })
+        });
 
         setLogin({
-            ...registration,
+            ...login,
             [name]: value
-        })
+        });
 
         setErrors(prev => ({
             ...prev,
@@ -80,8 +104,13 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                 if (data?.token) { // Проверяем, что token существует
                     console.log('data', data);
                     const token = data.token;
+                    const expirationTime = Date.now() + 12 * 60 * 60 * 1000; // 12 часов в миллисекундах
+
+                    // Сохраняем токен и время его истечения
                     setToken(token);
                     localStorage.setItem("token", token);
+                    localStorage.setItem("token_expiration", expirationTime);
+
                     console.log('Успех:', data);
                     onLoginSuccess(token);
                     onClose();
@@ -98,11 +127,6 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                 }));
             });
     };
-
-
-    useEffect(() => {
-        console.log('Токен из localStorage:', token);
-    }, [token]);
 
     const onWrapperClick = (event) => {
         if (event.target.classList.contains("container-body")) onClose();
@@ -180,7 +204,7 @@ function UserAccess({ isOpen, onClose, onLoginSuccess }) {
                                     text="Войти"
                                     onClick={handleLoginBtnClick}
                                 />
-                                {errors.login && <p className="error-message">{errors.login}</p>} {/* Отображение ошибки */}
+                                {errors.login && <p className="error-message">{errors.login}</p>}
                             </form>
                         </div>
 

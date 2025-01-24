@@ -9,6 +9,7 @@ import Rocket from './pages/Rocket';
 import Account from './pages/Account';
 import Chat from './components/Chat/Chat';
 import SlotWheel from './pages/SlotWheel';
+import Fruits from './pages/Fruits';
 
 // Создаем контекст для WebSocket
 export const WebSocketContext = createContext(null);
@@ -28,7 +29,7 @@ function App() {
     const wsWheel = new WebSocket('ws://localhost:8000/ws/wheel');
 
     ws.onopen = () => {
-      //console.log('WebSocket соединение установлено');
+      console.log('WebSocket соединение установлено');
     };
 
     wsWheel.onopen = () => {
@@ -37,7 +38,7 @@ function App() {
 
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
-      //console.log('Получено сообщение:', message);
+      console.log('Получено сообщение:', message);
     };
 
     wsWheel.onmessage = (event) => {
@@ -46,7 +47,7 @@ function App() {
     };
 
     ws.onerror = (error) => {
-      //console.error('WebSocket ошибка:', error);
+      console.error('WebSocket ошибка:', error);
     };
 
     wsWheel.onerror = (error) => {
@@ -54,7 +55,7 @@ function App() {
     };
 
     ws.onclose = () => {
-      // console.log('WebSocket соединение закрыто');
+      console.log('WebSocket соединение закрыто');
     };
 
     wsWheel.onclose = () => {
@@ -84,6 +85,7 @@ function App() {
             <Route path="/rocket" element={<Rocket />} />
             <Route path="/account" element={<Account />} />
             <Route path='/slotWheel' element={<SlotWheel />} />
+            <Route path='/fruits' element={<Fruits />} />
           </Routes>
           <Footer />
 

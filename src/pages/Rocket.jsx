@@ -3,22 +3,25 @@ import timerImg from './../img/timer.png';
 import plus from './../img/plus.png';
 import minus from './../img/minus.png';
 import { useEffect, useRef, useState, useContext } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateBalance } from "../redux/balanceUtils";
 import { WebSocketContext } from '../App';
-import { useDispatch } from "react-redux";
 
 const Rocket = () => {
-    // Scroll to top on render
+
     window.scrollTo(0, 0);
     const dispatch = useDispatch();
-    // States
+
     const balance = useSelector((state) => state.balance.value);
     const [token, setToken] = useState(localStorage.getItem("token") || null);
     const [x, setX] = useState(1);
     const [crashed, setCrashed] = useState(false);
     const [gameStarted, setGameStarted] = useState(false);
     const [crashPoint, setCrashPoint] = useState(1);
-    const [ratios, setRatios] = useState([]);
+    const [ratios, setRatios] = useState(() => {
+        const savedRatios = localStorage.getItem('ratios');
+        return savedRatios ? JSON.parse(savedRatios) : []; // Загружаем из localStorage или создаем пустой массив
+    });
     const [betMoney, setBetMoney] = useState(50);
     const [conclusions, setConclusions] = useState([]);
     const [betPlaced, setBetPlaced] = useState(false);
@@ -28,8 +31,12 @@ const Rocket = () => {
     const isClicked = useRef(false);
 
     const intervalRef = useRef(null); // Ссылка на интервал
+    const xRef = useRef(x);
 
-    // WebSocket initialization
+    useEffect(() => {
+        xRef.current = x; // Обновляем референс на каждое изменение x
+    }, [x]);
+
     useEffect(() => {
         if (socket) {
             console.log('Rocket: WebSocket доступен');
@@ -37,8 +44,8 @@ const Rocket = () => {
             const handleMessage = (event) => {
                 const message = JSON.parse(event.data);
                 if (message.name === "crash") {
-                    if (message.result === "start") startRound();
-                    else if (message.result === "stop") endRound();
+                    if (message.status === "start") startRound();
+                    else if (message.status === "stop") endRound();
                 }
             };
 
@@ -47,8 +54,8 @@ const Rocket = () => {
         }
     }, [socket]);
 
-    // Send bet request
     const sendBet = () => {
+        dispatch(updateBalance(token));
         if (isClicked.current) return;
         isClicked.current = true;
         setBetPlaced(true);
@@ -61,10 +68,8 @@ const Rocket = () => {
             },
             body: JSON.stringify({ bet_amount: betMoney }),
         }).catch((error) => console.error('Ошибка отправки ставки:', error));
-        dispatch(updateBalance(token));
     };
 
-    // Start round
     const startRound = () => {
         setCrashed(false);
         setX(1);
@@ -74,18 +79,22 @@ const Rocket = () => {
         intervalRef.current = setInterval(() => {
             setX((prevX) => prevX + 0.01); // Увеличиваем значение X
         }, 18); // Каждые 100 мс (10 шагов за секунду)
-
     };
 
-    // useEffect(() => {
-    //     if (!gameStarted && crashed) {
-    //         console.log("Финальное значение X:", x.toFixed(2));
-    //     }
-    // }, [gameStarted, crashed, x]);
+    useEffect(() => {
+        if (!gameStarted && crashed) {
+            console.log("Финальное значение X:", x.toFixed(2));
+        }
+    }, [gameStarted, crashed, x]);
+
+    useEffect(() => {
+        // Сохраняем `ratios` в localStorage при каждом его изменении
+        localStorage.setItem('ratios', JSON.stringify(ratios));
+    }, [ratios]);
 
 
-    // End round
     const endRound = () => {
+        const finalX = xRef.current.toFixed(2); // Берем актуальное значение
         setGameStarted(false);
         setCrashed(true);
         isClicked.current = false;
@@ -95,23 +104,27 @@ const Rocket = () => {
             clearInterval(intervalRef.current);
             intervalRef.current = null;
         }
+        // Добавляем текущий коэффициент в `ratios`
+        setRatios((prev) => {
+            const updatedRatios = [parseFloat(finalX), ...prev].slice(0, 19);
+            return updatedRatios;
+        });
+
         dispatch(updateBalance(token));
     };
 
-    // Collect winnings
     const collectWinnings = () => {
         if (!canCollect) return;
         setCanCollect(false);
 
         setConclusions((prev) => [
             { ratio: x.toFixed(2), bet: betMoney },
-            ...prev.slice(0, 19), // Keep only the last 20 records
+            ...prev.slice(0, 19),
         ]);
         createGame();
         dispatch(updateBalance(token));
     };
 
-    // Create game entry
     const createGame = () => {
         if (!token || crashPoint === null) return;
 
@@ -130,7 +143,6 @@ const Rocket = () => {
         dispatch(updateBalance(token));
     };
 
-    // Change bet
     const changeBet = (amount) => {
         setBetMoney((prev) => Math.max(50, Math.min(balance, prev + amount)));
     };

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { updateBalance } from "../../redux/balanceUtils";
 import Input from "../Input/Input";
 import Button from "../Button/Button";
 import "./Balance.css"
-import { updateBalance } from "../../redux/balanceUtils";
 
 function Balance({ token }) {
     const dispatch = useDispatch();
@@ -22,30 +22,39 @@ function Balance({ token }) {
     }
 
     function handleRegisterBtnClick() {
-        //console.log('Токен перед отправкой:', token);
-        fetch('http://localhost:8000/api/transaction/create', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({
-                type: balance.type,
-                amount: balance.amount
-            })
-        })
-            .then(response => {
+        if (!token) return;
+
+        const sendTransaction = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/transaction/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        type: balance.type,
+                        amount: balance.amount
+                    })
+                });
+
                 if (!response.ok) {
                     throw new Error(`HTTP error! статус: ${response.status}`);
                 }
-                return response.json();
-            })
-            .catch(error => console.log('Ошибка:', error));
 
-        if (token) {
-            dispatch(updateBalance(token));
-        }
+                const data = await response.json();
+                console.log('Ответ от сервера:', data);
+
+                // Обновляем баланс после успешного запроса
+                dispatch(updateBalance(token));
+            } catch (error) {
+                console.log('Ошибка:', error);
+            }
+        };
+
+        sendTransaction();
     }
+
 
     return (
         <>

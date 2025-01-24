@@ -33,19 +33,28 @@ const Home = () => {
                     <ul className="slots">
                         <NavLink to='/rocket' style={{ textDecoration: 'none' }}>
                             <li className="slot">
-                                <a className="slot__link">
+                                <div className="slot__link">
                                     <img src={img1} alt="превью" />
                                     <p>Ракетка</p>
-                                </a>
+                                </div>
                             </li>
                         </NavLink>
 
                         <NavLink to='/slotWheel' style={{ textDecoration: 'none' }}>
                             <li className="slot">
-                                <a style={{ textDecoration: 'none' }}>
+                                <div style={{ textDecoration: 'none' }}>
                                     <img src={img1} alt="превью" />
-                                    <p>Не ракетка</p>
-                                </a>
+                                    <p>Колесо (в разработке)</p>
+                                </div>
+                            </li>
+                        </NavLink>
+
+                        <NavLink to='/fruits' style={{ textDecoration: 'none' }}>
+                            <li className="slot">
+                                <div style={{ textDecoration: 'none' }}>
+                                    <img src={img1} alt="превью" />
+                                    <p>Фрукты</p>
+                                </div>
                             </li>
                         </NavLink>
                     </ul>

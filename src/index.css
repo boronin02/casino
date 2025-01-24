@@ -172,6 +172,7 @@ footer {
 
 .slots {
     display: flex;
+    flex-wrap: wrap;
     gap: 45px;
     justify-content: center;
 }
